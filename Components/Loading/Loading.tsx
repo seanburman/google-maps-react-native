@@ -15,8 +15,6 @@ const Loading: React.FC<Props> = ({children, icon}) => {
         ['butt', <Text>Butt</Text>]
     ])
 
-    console.log(icons)
-
     return (
         <View style={styles.wrapper}>
             {children}

@@ -1,34 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import * as Location from 'expo-location';
 import MapView, { MapStyleElement, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { useLocation } from '../../hooks';
+import { useLocation } from '../../redux/location/hooks';
 import { DragImageMarker } from '../Markers/Markers';
 import Loading from '../Loading/Loading';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { storeRegion } from '../../redux/location/utils';
 
 const MapComponent: React.FC = () =>{
-  const [_location,,] = useLocation()
-  const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null)
-  const latitude = location?.latitude
-  const longitude = location?.longitude
+  const [location, region] = useLocation()
+
+
+  const latitude: number | undefined = location.details?.latitude
+  const longitude: number | undefined = location.details?.longitude
+
+  if(!latitude || !longitude || region?.latitude == 0 || region?.longitude == 0) {
+    return <Loading icon='map'/>
+  }
 
   console.log(latitude, longitude)
-  const [ region, setRegion ] = useState({
-    latitude: latitude,
-    longitude: longitude,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421, 
-    })
-
-  useEffect(() => {
-    setLocation(_location)
-  },[_location])
-
   console.log(region)
-
-  if(!latitude || !longitude) return <Loading icon='map'/>
-
+  
   return (
     <>
     {
@@ -38,6 +30,7 @@ const MapComponent: React.FC = () =>{
                 width: '100%',
                 flex: 8,
             }}
+            //ref={ref => {map = ref}}
             showsCompass
             showsIndoors
             initialRegion={{
@@ -46,7 +39,7 @@ const MapComponent: React.FC = () =>{
             latitudeDelta: 0.0022,
             longitudeDelta: 0.0021,
             }}
-            onRegionChange={(region) => setRegion(region)}
+            //onRegionChange={(region) => storeRegion(region)}
             provider={PROVIDER_GOOGLE}
             customMapStyle={mapStyle}
             //showsUserLocation={true}
@@ -100,7 +93,7 @@ const mapStyle: MapStyleElement[] = [
     "elementType": "labels.icon",
     "stylers": [
       {
-        "color": "#4cd327"
+        "color": "#000000"
       }
     ]
   },

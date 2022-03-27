@@ -1,9 +1,10 @@
 import 'react-native-gesture-handler';
+import { Provider } from 'react-redux';
+import { store } from './redux/store'
 import { StatusBar, StatusBarStyle, StyleSheet, View } from 'react-native';
 import MapComponent from './screens/Map';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { Drawer, RootStackParamList } from './Types';
-// import { Drawer, RootStackParamList } from './Types/params';
 import CustomDrawerContent from './Components/Drawer/DrawerContent';
 import { getHeaderTitle } from '@react-navigation/elements';
 import Profile from './screens/Profile';
@@ -30,41 +31,43 @@ export default function App() {
   ]
 
   return (
-    <>
-      <StatusBar
-          animated={true}
-          barStyle={statusBar}
-      />
-      <NavigationContainer theme={theme}>
-        <Drawer.Navigator 
-          initialRouteName="Map"
-          drawerContent={(props) => <CustomDrawerContent {...props} />}
-        >
-          {
-            routes.map((route, i) => (
-              <Drawer.Screen 
-                key={i}
-                name={route.name as keyof RootStackParamList} 
-                component={route.component} 
-                options={{
-                header: ({ navigation, route, options }) => {
-                  const title = getHeaderTitle(options, route.name);
-                  return (
-                      <View style={styles.header}>
-                          {/* <Text style={styles.headerName}>{title}</Text> */}
-                          {/* <Pressable onPress={() => navigation.openDrawer()} style={styles.menuButton}>
-                          <Ionicons name="md-menu" size={32} color="black" />
-                          </Pressable> */}
-                      </View>
-                  )
-                }
-                }}
-              />
-          ))
-          }
-        </Drawer.Navigator>
-      </NavigationContainer>
-    </>
+    <Provider store={store}>
+      <>
+        <StatusBar
+            animated={true}
+            barStyle={statusBar}
+        />
+        <NavigationContainer theme={theme}>
+          <Drawer.Navigator 
+            initialRouteName="Map"
+            drawerContent={(props) => <CustomDrawerContent {...props} />}
+          >
+            {
+              routes.map((route, i) => (
+                <Drawer.Screen 
+                  key={i}
+                  name={route.name as keyof RootStackParamList} 
+                  component={route.component} 
+                  options={{
+                  header: ({ navigation, route, options }) => {
+                    const title = getHeaderTitle(options, route.name);
+                    return (
+                        <View style={styles.header}>
+                            {/* <Text style={styles.headerName}>{title}</Text> */}
+                            {/* <Pressable onPress={() => navigation.openDrawer()} style={styles.menuButton}>
+                            <Ionicons name="md-menu" size={32} color="black" />
+                            </Pressable> */}
+                        </View>
+                    )
+                  }
+                  }}
+                />
+            ))
+            }
+          </Drawer.Navigator>
+        </NavigationContainer>
+      </>
+    </Provider>
   );
 }
 

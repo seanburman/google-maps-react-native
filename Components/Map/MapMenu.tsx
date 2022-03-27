@@ -8,6 +8,8 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { FontAwesome } from '@expo/vector-icons';
 import { Colors } from "../../assets/Theme";
 import * as Speech from 'expo-speech';
+import { _goToCurrentLocation } from "../../redux/location/locationSlice";
+import { goToCurrentLocation } from "../../redux/location/utils";
 
 interface Props {
     drawerNav: DrawerContentComponentProps,
@@ -32,7 +34,7 @@ const MapMenu: React.FC<Props> = ({drawerNav, tabNav}) => {
                         <FontAwesome name="map" size={32} color="green" />
                         </View>
                 </Pressable>
-                <Pressable onPress={() => tabNav.navigation.navigate('Map', {screen: 'Test'})}>
+                <Pressable onPress={() => goToCurrentLocation()}>
                         <View style={styles.iconButton}>
                             <Fontisto name="map-marker-alt" size={40} color="#FF0A33"/>
                         </View>
