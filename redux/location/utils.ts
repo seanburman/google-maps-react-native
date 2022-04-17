@@ -1,4 +1,5 @@
-import { LocationObjectCoords, LocationSubscription } from "expo-location";
+import * as Location from "expo-location";
+import { useEffect, useState } from "react";
 import { Region } from "../../Types";
 import { store } from "../store";
 import { _goToCurrentLocation, _storeDetails, _storeRegion} from "./locationSlice";
@@ -7,7 +8,7 @@ const storeRegion = (region: Region) => {
     store.dispatch(_storeRegion(region))
 }
 
-const storeDetails = (details: LocationObjectCoords) => {
+const storeDetails = (details: Location.LocationObjectCoords) => {
     store.dispatch(_storeDetails(details))
 }
 

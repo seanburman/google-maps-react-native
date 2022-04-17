@@ -1,26 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, View } from 'react-native';
 import MapView, { MapStyleElement, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useLocation } from '../../redux/location/hooks';
 import { DragImageMarker } from '../Markers/Markers';
 import Loading from '../Loading/Loading';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-import { storeRegion } from '../../redux/location/utils';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'; 
+import { useInitialLocation, } from '../../redux/location/hooks';
+import * as Location from "expo-location";
+import { Region } from '../../Types';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const MapComponent: React.FC = () =>{
-  const [location, region] = useLocation()
-
-
+  const [location] = useLocation()
+  const [initialLocation, error] = useInitialLocation() as [Location.LocationObject | null, string | null]
+  const [loaded, setLoaded] = useState(false)
+  const [region, setRegion] = useState<Region | null>()
   const latitude: number | undefined = location.details?.latitude
   const longitude: number | undefined = location.details?.longitude
+  
+  //TODO: Handle location error
 
-  if(!latitude || !longitude || region?.latitude == 0 || region?.longitude == 0) {
+  const delta = {
+    latitudeDelta: 0.0022,
+    longitudeDelta: 0.0021,
+  }
+
+  useEffect(() => {
+    if(initialLocation && !loaded) {
+      setRegion({...initialLocation!.coords, ...delta});
+      setLoaded(true)
+    }
+  },[initialLocation])
+
+  if(!latitude || !longitude || !loaded || !initialLocation || !region) {
     return <Loading icon='map'/>
   }
 
-  console.log(latitude, longitude)
-  console.log(region)
-  
+  let map: MapView
+
   return (
     <>
     {
@@ -30,20 +48,16 @@ const MapComponent: React.FC = () =>{
                 width: '100%',
                 flex: 8,
             }}
-            //ref={ref => {map = ref}}
             showsCompass
             showsIndoors
-            initialRegion={{
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.0022,
-            longitudeDelta: 0.0021,
-            }}
-            //onRegionChange={(region) => storeRegion(region)}
+            initialRegion={region}
+            onRegionChangeComplete={(region) =>setRegion(region)} // Store this elsewhere for dropping markers 
+            userLocationCalloutEnabled={true}
             provider={PROVIDER_GOOGLE}
             customMapStyle={mapStyle}
+            ref={(_map) => map = _map!}
             //showsUserLocation={true}
-            followsUserLocation={true}
+            followsUserLocation={false}
             onTouchEnd={() => console.log("Touch end: icons will gain transparency")}
             toolbarEnabled={true}
         >
@@ -59,8 +73,14 @@ const MapComponent: React.FC = () =>{
           <DragImageMarker 
             callBack={(coords) => console.log(coords)}
           />
+          
         </MapView>
     }
+    <View style={styles.locationButton}>
+      <TouchableOpacity onPress={() => map.animateCamera({center: {latitude: latitude, longitude: longitude}})}>
+        <MaterialIcons name="my-location" size={40} color="grey" />
+      </TouchableOpacity>
+    </View>
     </>
   );
 }
@@ -68,6 +88,21 @@ const MapComponent: React.FC = () =>{
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    locationButton: {
+      position: 'absolute',
+      bottom: 12,
+      right: 12,
+      backgroundColor: 'white',
+      borderRadius: 100,
+      padding: 10,
+      opacity: 0.7,
+      shadowOpacity: 0.7,
+      shadowColor: 'black',
+      shadowOffset: {
+        height: 1,
+        width: 1
+      }
     },
     personIcon: {
       shadowColor: 'black',

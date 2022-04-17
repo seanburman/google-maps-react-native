@@ -9,7 +9,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Colors } from "../../assets/Theme";
 import * as Speech from 'expo-speech';
 import { _goToCurrentLocation } from "../../redux/location/locationSlice";
-import { goToCurrentLocation } from "../../redux/location/utils";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { FontAwesome5 } from '@expo/vector-icons'; 
 
 interface Props {
     drawerNav: DrawerContentComponentProps,
@@ -19,31 +20,35 @@ const MapMenu: React.FC<Props> = ({drawerNav, tabNav}) => {
 
     const handlePress = () => {
         Speech.speak('You can even use text to speech for improved accessibility.')
-        console.log('press')
     }
 
     return (
         <Animated.View style={styles.wrapper}>
-                <Pressable onPress={() => handlePress()}>
+                <TouchableOpacity onPress={() => handlePress()}>
                         <View style={styles.iconButton}>
                         <MaterialCommunityIcons name="bag-personal" size={40} color="#FF6E1F" />
                         </View>
-                </Pressable>
-                <Pressable onPress={() => tabNav.navigation.navigate('Map', {screen: '_Map'})}>
-                        <View style={styles.iconButton}>
-                        <FontAwesome name="map" size={32} color="green" />
-                        </View>
-                </Pressable>
-                <Pressable onPress={() => goToCurrentLocation()}>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => tabNav.navigation.navigate('Map', {screen: 'MarkerOptions'})}>
                         <View style={styles.iconButton}>
                             <Fontisto name="map-marker-alt" size={40} color="#FF0A33"/>
                         </View>
-                </Pressable>
-                <Pressable onPress={() => drawerNav.navigation.openDrawer()}>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => tabNav.navigation.navigate('Map', {screen: 'MarkerOptions'})}>
+                        <View style={styles.iconButton}>
+                            <FontAwesome5 name="plus" size={36} color="black" />
+                        </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => tabNav.navigation.navigate('Map', {screen: '_Map'})}>
+                        <View style={styles.iconButton}>
+                        <FontAwesome name="map" size={32} color="green" />
+                        </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => drawerNav.navigation.openDrawer()}>
                         <View style={styles.iconButton}>
                             <Ionicons name="md-menu" size={40} color="black" />
-                        </View>   
-                </Pressable>
+                        </View>  
+                </TouchableOpacity>
         </Animated.View>
     )
 }
@@ -56,17 +61,17 @@ const styles=StyleSheet.create({
         alignItems: 'flex-end',
         justifyContent: 'space-evenly',
         flexDirection: 'row',
+        backgroundColor: Colors.primaryLight,
         shadowColor: 'grey',
         shadowOpacity: 0.2,
         shadowOffset: {
             width: 0,
             height: -1
         },
-        backgroundColor: Colors.primaryLight
     },
     buttonWrapper: {
         display: 'flex',
-        backgroundColor: 'red'
+        backgroundColor: 'red',
     },
     iconButton: {
         padding: 10,
@@ -99,6 +104,5 @@ const styles=StyleSheet.create({
         backgroundColor: '#A4031F'
     },
 })
-
 
 export default MapMenu;

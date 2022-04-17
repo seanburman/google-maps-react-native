@@ -4,10 +4,11 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MapComponent from '../Components/Map/MapComponent';
 import MapMenu from '../Components/Map/MapMenu';
+import MarkerOptions from './MarkerOptions';
 
 interface Props extends DrawerContentComponentProps {}
 
-const Explore: React.FC<Props> = (props: Props) =>{
+const Explore: React.FC<Props> = (drawerProps: Props) =>{
 
   const Tab = createBottomTabNavigator();
 
@@ -21,9 +22,8 @@ const Explore: React.FC<Props> = (props: Props) =>{
 
   const Okay = <Text>Test</Text>
   return (
-    <>
         <Tab.Navigator 
-          tabBar={(tabProps: BottomTabBarProps) => <MapMenu tabNav={tabProps} drawerNav={props}/>} 
+          tabBar={(tabProps: BottomTabBarProps) => <MapMenu tabNav={tabProps} drawerNav={drawerProps}/>} 
           initialRouteName={'_Map'} 
           screenOptions={{
             tabBarStyle: { 
@@ -31,10 +31,9 @@ const Explore: React.FC<Props> = (props: Props) =>{
             },
           }}
         >
-          <Tab.Screen name="Test" component={Test} options={{headerShown: false}}/>
+          <Tab.Screen name="MarkerOptions" component={MarkerOptions} options={{headerShown: false}}/>
           <Tab.Screen name="_Map" component={MapComponent} options={{headerShown: false}}/>
         </Tab.Navigator>
-    </>
   );
 }
 
