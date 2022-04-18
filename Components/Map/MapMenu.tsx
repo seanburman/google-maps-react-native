@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import Animated from "react-native-reanimated";
 import { Fontisto } from '@expo/vector-icons';
@@ -34,7 +34,13 @@ const MapMenu: React.FC<Props> = ({drawerNav, tabNav}) => {
                             <Fontisto name="map-marker-alt" size={40} color="#FF0A33"/>
                         </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => tabNav.navigation.navigate('Map', {screen: 'MarkerOptions'})}>
+                <TouchableOpacity onPress={() => tabNav.navigation.navigate(
+                    'Map', 
+                    {
+                        screen: 'MarkerOptions',
+                        params: {'test': 'test'}
+                    }
+                )}>
                         <View style={styles.iconButton}>
                             <FontAwesome5 name="plus" size={36} color="black" />
                         </View>

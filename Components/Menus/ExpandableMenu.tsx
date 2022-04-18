@@ -5,10 +5,15 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../../assets/Theme";
 
+type SubCategory = {
+    id: number, 
+    val: string
+}
+
 type Content = {
     isExpanded: boolean,
     category_name: string,
-    subcategory: {id: number, val: string}[]
+    subcategory: SubCategory[]
 }
 
 const CONTENT: Content[] = [
@@ -31,9 +36,11 @@ const CONTENT: Content[] = [
 
 interface ExpandableComponentProps {
     item: Content,
-    onClickFunction: () => void
+    onClickExpand: () => void,
+    onCategorySelect: () => void
 }
-const ExpandableComponent: React.FC<ExpandableComponentProps> = ({item, onClickFunction}) => {
+const ExpandableComponent: React.FC<ExpandableComponentProps> = (props: ExpandableComponentProps) => {
+    const {item, onClickExpand, onCategorySelect} = props
     const [layoutHeight, setLayoutHeight] = useState<number | undefined>(0);
 
     if(Platform.OS === 'android') {
@@ -50,7 +57,7 @@ const ExpandableComponent: React.FC<ExpandableComponentProps> = ({item, onClickF
 
     return (
         <View style={{}}>
-            <TouchableOpacity style={styles.item} onPress={onClickFunction}>
+            <TouchableOpacity style={styles.item} onPress={onClickExpand}>
                 <Text style={styles.itemtext}>
                     {item.category_name}
                 </Text>
@@ -61,7 +68,11 @@ const ExpandableComponent: React.FC<ExpandableComponentProps> = ({item, onClickF
             }}>
                 {
                     item.subcategory.map((item, key) => (
-                        <TouchableOpacity key={key} style={styles.content}>
+                        <TouchableOpacity 
+                            key={key} 
+                            style={styles.content}
+                            onPress={() => onCategorySelect()}
+                        >
                             <Text style={styles.text}>
                                 {item.val}
                             </Text>
@@ -74,7 +85,11 @@ const ExpandableComponent: React.FC<ExpandableComponentProps> = ({item, onClickF
     )
 }
 
-const ExpandableMenu: React.FC = () => {
+interface ExpandableMenuProps {
+    onCategorySelect: () => void
+}
+
+const ExpandableMenu: React.FC<ExpandableMenuProps> = ({onCategorySelect}) => {
     const [multiSelect, setMultiSelect] = useState(false);
     const [listDataSource, setlistDataSource] = useState<Content[]>(CONTENT);
 
@@ -82,7 +97,6 @@ const ExpandableMenu: React.FC = () => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         const array = [...listDataSource];
         if(multiSelect) {
-            console.log('ok')
             array[index]['isExpanded'] = !array[index]['isExpanded'];
         } else {
             array.map((value, placeindex) => 
@@ -119,7 +133,8 @@ const ExpandableMenu: React.FC = () => {
                             <ExpandableComponent 
                                 item={item} 
                                 key={item.category_name}
-                                onClickFunction={() => updateLayout(key)}
+                                onClickExpand={() => updateLayout(key)}
+                                onCategorySelect={onCategorySelect}
                             />
                         ))
                     }

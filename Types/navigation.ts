@@ -2,7 +2,12 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 
 type RootStackParamList = {
     Profile: undefined;
-    Map: undefined;
+    Map: {
+        marker?: {
+            lattitude: number,
+            longitude: number
+        }
+    };
 }
 
 const Drawer = createDrawerNavigator<RootStackParamList>();

@@ -31,8 +31,8 @@ const Explore: React.FC<Props> = (drawerProps: Props) =>{
             },
           }}
         >
-          <Tab.Screen name="MarkerOptions" component={MarkerOptions} options={{headerShown: false}}/>
-          <Tab.Screen name="_Map" component={MapComponent} options={{headerShown: false}}/>
+          <Tab.Screen name="MarkerOptions" component={MarkerOptions} options={{headerShown: false}} />
+          <Tab.Screen name="_Map" component={MapComponent} options={{headerShown: false}} />
         </Tab.Navigator>
   );
 }

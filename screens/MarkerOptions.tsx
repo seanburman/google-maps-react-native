@@ -1,10 +1,19 @@
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { StyleSheet, View } from "react-native"
 import ExpandableMenu from "../Components/Menus/ExpandableMenu";
 
-const MarkerOptions: React.FC = () => {
+interface Props {
+    navigation: BottomTabNavigationProp<ParamListBase>
+}
+
+const MarkerOptions: React.FC<Props> = ({navigation}) => {
+
     return (
         <View style={styles.wrapper}>
-            <ExpandableMenu />
+            <ExpandableMenu onCategorySelect={() => navigation.navigate(
+                '_Map', { marker: {lattitude: 0, longitude: 0}}
+            )}/>
         </View>
     )
 }

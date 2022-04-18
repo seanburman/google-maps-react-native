@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { MapStyleElement, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useLocation } from '../../redux/location/hooks';
@@ -10,8 +10,17 @@ import { useInitialLocation, } from '../../redux/location/hooks';
 import * as Location from "expo-location";
 import { Region } from '../../Types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { ParamListBase, RouteProp } from '@react-navigation/native';
 
-const MapComponent: React.FC = () =>{
+interface Props {
+  navigation: BottomTabNavigationProp<ParamListBase>
+  route: RouteProp<ParamListBase>
+}
+
+const MapComponent: React.FC<Props> = ({route}) =>{
+
+  console.log(route.params)
   const [location] = useLocation()
   const [initialLocation, error] = useInitialLocation() as [Location.LocationObject | null, string | null]
   const [loaded, setLoaded] = useState(false)
